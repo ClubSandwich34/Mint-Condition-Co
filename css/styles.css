@@ -1,0 +1,143 @@
+﻿.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border-bottom: 2px solid black;
+    background-color: white;
+    font-family: 'Bree Serif', serif;
+}
+
+.left-section,
+.center-section,
+.right-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+/* Align left items to the start */
+.left-section {
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+/* Center the title */
+.center-section {
+    justify-content: center;
+}
+
+/* Align right items to the end */
+.right-section {
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+
+/* Shared icon styles */
+.icon {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.logo-icon {
+    width: 400px;
+    height: 50px;
+}
+
+.pokeball-button {
+    width: 40px;
+    height: 40px;
+    background-image: url("../images/pokeball.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: inline-block;
+    transition: background-image 0.3s ease;
+}
+
+    .pokeball-button:hover {
+        background-image: url("../images/open-pokeball.jpg");
+    }
+
+
+/* Site title in center */
+.site-title {
+    margin: 0;
+    font-size: 28px;
+    color: red;
+}
+
+/* Search bar styles */
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+    .search-container input {
+        padding: 5px 10px;
+        border: none;
+        background: #ccc;
+        width: 150px;
+        font-size: 14px;
+    }
+
+.search-btn {
+    background: #ccc;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+/* Category Section */
+#categories {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-top: 2px solid black;
+}
+
+#categories h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: red;
+    font-family: 'Bree Serif', serif; 
+}
+
+#categories ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;              
+    justify-content: center;    
+    gap: 40px;                  
+}
+
+#categories li {
+    font-size: 18px;
+    padding: 5px 0;
+    text-align: center;
+    font-family: 'Bree Serif', serif;
+    display: flex;
+    flex-direction: column;     
+    align-items: center;
+}
+
+.category-img {
+    margin-top: 10px;
+    width: 100px;               
+    height: auto;
+}
+
+.category-link {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;
+}
+
+.category-link:hover {
+    color: rgb(255, 0, 0); 
+}
