@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart - Mint Condition Co.</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="left-section">
+            <a href="index.html" class="pokeball-button" title="Home"></a>
+            <div class="search-container">
+                <input type="text" placeholder="Search cards..." />
+                <button class="search-btn">
+                    <img src="images/search-icon.png" alt="Search" class="icon" />
+                </button>
+            </div>
+        </div>
+        <div class="center-section">
+            <img src="images/logo-icon.png" alt="Logo" class="icon logo-icon"/>
+        </div>
+        <div class="right-section">
+            <a href="account.html">
+                <img src="images/profile-icon.png" alt="Profile" class="icon" />
+            </a>
+            <a href="cart.html">
+                <img src="images/cart-icon.png" alt="Cart" class="icon" />
+            </a>
+        </div>
+    </header>
+    <main>
+        <h1 class="site-title title-font">Your Cart</h1>
+        <p class="title-font">This is where your selected cards will appear.</p>
+        <div class="cart-empty">
+            <p>Your cart is currently empty.</p>
+        </div>
+    </main>
+    <script>
+function renderCart() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartDiv = document.querySelector('.cart-empty');
+    if (cart.length > 0) {
+        cartDiv.innerHTML = '';
+        cart.forEach((item, idx) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.style.marginBottom = "0"; // Remove extra margin for grid
+
+            const unitPrice = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
+            const totalPrice = (unitPrice * (item.qty || 1)).toFixed(2);
+
+            let priceLine = `<p class="card-price title-font">$${totalPrice}`;
+            if ((item.qty || 1) >= 2) {
+                priceLine += ` <span style="font-size:0.9em;color:#bbb;">(${item.qty} × ${item.price})</span>`;
+            }
+            priceLine += `</p>`;
+
+            card.innerHTML = `
+                <img src="${item.img}" alt="${item.title} Card" class="pokemon-card-img">
+                <h2 class="card-title title-font">${item.title}</h2>
+                <p class="card-type-hp">${item.desc}</p>
+                ${priceLine}
+                <div style="margin: 10px 0;">
+                    <button class="qty-btn" data-idx="${idx}" data-action="decrease">-</button>
+                    <span class="cart-qty" style="margin:0 10px;">${item.qty || 1}</span>
+                    <button class="qty-btn" data-idx="${idx}" data-action="increase">+</button>
+                </div>
+                <button class="remove-cart-btn" data-idx="${idx}">Remove</button>
+            `;
+            cartDiv.appendChild(card);
+        });
+
+        // Quantity buttons
+        cartDiv.querySelectorAll('.qty-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(this.getAttribute('data-idx'));
+                const action = this.getAttribute('data-action');
+                if (action === 'increase') {
+                    cart[idx].qty = (cart[idx].qty || 1) + 1;
+                } else if (action === 'decrease' && (cart[idx].qty || 1) > 1) {
+                    cart[idx].qty = (cart[idx].qty || 1) - 1;
+                }
+                localStorage.setItem('cart', JSON.stringify(cart));
+                renderCart();
+            });
+        });
+
+        // Remove buttons
+        cartDiv.querySelectorAll('.remove-cart-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(this.getAttribute('data-idx'));
+                cart.splice(idx, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                renderCart();
+            });
+        });
+    } else {
+        cartDiv.innerHTML = '<p>Your cart is currently empty.</p>';
+    }
+}
+renderCart();
+</script>
+</body>
+</html>

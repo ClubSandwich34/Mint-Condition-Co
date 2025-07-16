@@ -3,16 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <title>Trainer Cards</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar">
-        <!-- ...navbar code (copy from main page)... -->
-    </nav>
+    <header class="navbar">
+        <div class="left-section">
+            <a href="index.html" class="pokeball-button" title="Home"></a>
+            <div class="search-container">
+                <input type="text" placeholder="Search cards..." />
+                <button class="search-btn">
+                    <img src="images/search-icon.png" alt="Search" class="icon" />
+                </button>
+            </div>
+        </div>
+        <div class="center-section">
+            <img src="images/logo-icon.png" alt="Logo" class="icon logo-icon"/>
+        </div>
+        <div class="right-section">
+            <a href="account.html">
+                <img src="images/profile-icon.png" alt="Profile" class="icon" />
+            </a>
+            <a href="cart.html">
+                <img src="images/cart-icon.png" alt="Cart" class="icon" />
+            </a>
+        </div>
+    </header>
     <main>
-        <h1 class="site-title">Trainer Cards</h1>
-        <!-- Add your Trainer Cards content here -->
-        <p>Welcome to the Trainer Cards section!</p>
+        <h1 class="site-title title-font">Trainer Cards</h1>
+        <p class="title-font">Welcome to the Trainer Cards section!</p>
+        <section class="cards-gallery">
+            <div class="card">
+                <img src="images/152.png" alt="Dome Fossil Card" class="pokemon-card-img">
+                <h2 class="card-title title-font">Dome Fossil</h2>
+                <p class="card-type-hp">Type: Item</p>
+                <p class="card-price title-font">$2.99</p>
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>
+            <div class="card">
+                <img src="images/153.png" alt="Helix Fossil Card" class="pokemon-card-img">
+                <h2 class="card-title title-font">Helix Fossil</h2>
+                <p class="card-type-hp">Type: Item</p>
+                <p class="card-price title-font">$1.49</p>
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>
+            <div class="card">
+                <img src="images/154.png" alt="Old Amber Card" class="pokemon-card-img">
+                <h2 class="card-title title-font">Old Amber</h2>
+                <p class="card-type-hp">Type: Item</p>
+                <p class="card-price title-font">$1.99</p>
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>
+            <div class="card">
+                <img src="images/155.png" alt="Big Air Balloon Card" class="pokemon-card-img">
+                <h2 class="card-title title-font">Big Air Balloon</h2>
+                <p class="card-type-hp">Type: Pokémon Tool</p>
+                <p class="card-price title-font">$2.99</p>
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>
+            <div class="card">
+                <img src="images/156.png" alt="Bill's Transfer Card" class="pokemon-card-img">
+                <h2 class="card-title title-font">Bill's Transfer</h2>
+                <p class="card-type-hp">Type: Supporter</p>
+                <p class="card-price title-font">$2.99</p>
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>
+            <div class="card">
+                <img src="images/157.png" alt="Cycling Road Card" class="pokemon-card-img">
+                <h2 class="card-title title-font">Cycling Road</h2>
+                <p class="card-type-hp">Type: Stadium</p>
+                <p class="card-price title-font">$2.99</p>
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>
+            <!-- Add more trainer cards as needed -->
+        </section>
     </main>
+    <script>
+document.querySelectorAll('.add-to-cart-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        const card = btn.closest('.card');
+        const title = card.querySelector('.card-title').textContent;
+        const img = card.querySelector('img').getAttribute('src');
+        const desc = card.querySelector('.card-type-hp').innerHTML;
+        const price = card.querySelector('.card-price').textContent;
+
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existing = cart.find(item => item.title === title && item.price === price);
+        if (existing) {
+            existing.qty = (existing.qty || 1) + 1;
+        } else {
+            cart.push({ title, img, desc, price, qty: 1 });
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        alert(title + " added to cart!");
+    });
+});
+</script>
 </body>
 </html>
