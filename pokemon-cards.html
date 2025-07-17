@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="center-section">
-            <img src="images/logo-icon.png" alt="Logo" class="icon logo-icon"/>
+            <img src="images/logo-icon.png" alt="Logo" class="icon logo-icon" />
         </div>
         <div class="right-section">
             <a href="account.html">
@@ -38,87 +38,181 @@
                 <h2 class="card-title title-font">Squirtle</h2>
                 <p class="card-type-hp">Type: Water<br>HP: 60</p>
                 <p class="card-price title-font">$4.99</p>
-                <button class="add-to-cart-btn">Add to Cart</button>
+                <p class="stock" id="stock-Squirtle"></p>
+                <p class="cart-qty-indicator" id="cartQty-Squirtle"></p>
+                <button class="add-to-cart-btn" onclick="buyCard('Squirtle')">Add to Cart</button>
             </div>
             <div class="card">
                 <img src="images/charmander.png" alt="Charmander Card" class="pokemon-card-img">
                 <h2 class="card-title title-font">Charmander</h2>
                 <p class="card-type-hp">Type: Fire<br>HP: 70</p>
                 <p class="card-price title-font">$5.99</p>
-                <button class="add-to-cart-btn">Add to Cart</button>
+                <p class="stock" id="stock-Charmander"></p>
+                <p class="cart-qty-indicator" id="cartQty-Charmander"></p>
+                <button class="add-to-cart-btn" onclick="buyCard('Charmander')">Add to Cart</button>
             </div>
             <div class="card">
                 <img src="images/bulbasaur.png" alt="Bulbasaur Card" class="pokemon-card-img">
                 <h2 class="card-title title-font">Bulbasaur</h2>
                 <p class="card-type-hp">Type: Grass<br>HP: 70</p>
                 <p class="card-price title-font">$5.99</p>
-                <button class="add-to-cart-btn">Add to Cart</button>
+                <p class="stock" id="stock-Bulbasaur"></p>
+                <p class="cart-qty-indicator" id="cartQty-Bulbasaur"></p>
+                <button class="add-to-cart-btn" onclick="buyCard('Bulbasaur')">Add to Cart</button>
             </div>
             <div class="card">
                 <img src="images/wartortle.png" alt="Wartortle Card" class="pokemon-card-img">
                 <h2 class="card-title title-font">Wartortle</h2>
                 <p class="card-type-hp">Type: Water<br>HP: 100</p>
                 <p class="card-price title-font">$7.99</p>
-                <button class="add-to-cart-btn">Add to Cart</button>
+                <p class="stock" id="stock-Wartortle"></p>
+                <p class="cart-qty-indicator" id="cartQty-Wartortle"></p>
+                <button class="add-to-cart-btn" onclick="buyCard('Wartortle')">Add to Cart</button>
             </div>
             <div class="card">
                 <img src="images/charmeleon.png" alt="Charmeleon Card" class="pokemon-card-img">
                 <h2 class="card-title title-font">Charmeleon</h2>
                 <p class="card-type-hp">Type: Fire<br>HP: 100</p>
                 <p class="card-price title-font">$7.99</p>
-                <button class="add-to-cart-btn">Add to Cart</button>
+                <p class="stock" id="stock-Charmeleon"></p>
+                <p class="cart-qty-indicator" id="cartQty-Charmeleon"></p>
+                <button class="add-to-cart-btn" onclick="buyCard('Charmeleon')">Add to Cart</button>
             </div>
             <div class="card">
                 <img src="images/ivysaur.png" alt="Ivysaur Card" class="pokemon-card-img">
                 <h2 class="card-title title-font">Ivysaur</h2>
                 <p class="card-type-hp">Type: Grass<br>HP: 100</p>
                 <p class="card-price title-font">$7.99</p>
-                <button class="add-to-cart-btn">Add to Cart</button>
+                <p class="stock" id="stock-Ivysaur"></p>
+                <p class="cart-qty-indicator" id="cartQty-Ivysaur"></p>
+                <button class="add-to-cart-btn" onclick="buyCard('Ivysaur')">Add to Cart</button>
             </div>
             <div class="card">
                 <img src="images/blastoise.png" alt="Blastoise Card" class="pokemon-card-img">
                 <h2 class="card-title title-font">Blastoise EX</h2>
                 <p class="card-type-hp">Type: Water<br>HP: 330</p>
                 <p class="card-price title-font">$29.99</p>
-                <button class="add-to-cart-btn">Add to Cart</button>
+                <p class="stock" id="stock-Blastoise-EX"></p>
+                <p class="cart-qty-indicator" id="cartQty-Blastoise-EX"></p>
+                <button class="add-to-cart-btn" onclick="buyCard('Blastoise EX')">Add to Cart</button>
             </div>
             <div class="card">
                 <img src="images/charizard.png" alt="Charizard Card" class="pokemon-card-img">
                 <h2 class="card-title title-font">Charizard EX</h2>
                 <p class="card-type-hp">Type: Fire<br>HP: 330</p>
                 <p class="card-price title-font">$29.99</p>
-                <button class="add-to-cart-btn">Add to Cart</button>
+                <p class="stock" id="stock-Charizard-EX"></p>
+                <p class="cart-qty-indicator" id="cartQty-Charizard-EX"></p>
+                <button class="add-to-cart-btn" onclick="buyCard('Charizard EX')">Add to Cart</button>
             </div>
             <div class="card">
                 <img src="images/venusaur.png" alt="Venusaur Card" class="pokemon-card-img">
                 <h2 class="card-title title-font">Venusaur EX</h2>
                 <p class="card-type-hp">Type: Grass<br>HP: 340</p>
                 <p class="card-price title-font">$34.99</p>
-                <button class="add-to-cart-btn">Add to Cart</button>
+                <p class="stock" id="stock-Venusaur-EX"></p>
+                <p class="cart-qty-indicator" id="cartQty-Venusaur-EX"></p>
+                <button class="add-to-cart-btn" onclick="buyCard('Venusaur EX')">Add to Cart</button>
             </div>
             <!-- Add more cards as needed -->
         </section>
     </main>
+    <script src="inventory.js"></script>
     <script>
-document.querySelectorAll('.add-to-cart-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-        const card = btn.closest('.card');
-        const title = card.querySelector('.card-title').textContent;
-        const img = card.querySelector('img').getAttribute('src');
-        const desc = card.querySelector('p').innerHTML;
-        const price = card.querySelector('.card-price').textContent;
+        const cardTitles = document.querySelectorAll(".card-title");
 
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const existing = cart.find(item => item.title === title);
-        if (existing) {
-            existing.qty = (existing.qty || 1) + 1;
-        } else {
-            cart.push({ title, img, desc, price, qty: 1 });
+        function updateAllStocks() {
+            cardTitles.forEach((title) => {
+                const name = title.textContent.trim();
+                const idName = formatID(name);
+                const stockElem = document.getElementById(`stock-${idName}`);
+                const button = title.closest('.card').querySelector('.add-to-cart-btn');
+
+                if (stockElem) {
+                    const stock = getStock(name);
+                    stockElem.innerText = stock > 0 ? `In stock: ${stock}` : "Sold Out";
+
+                    // Disable or enable button
+                    button.disabled = stock === 0;
+                    button.textContent = stock === 0 ? "Sold Out" : "Add to Cart";
+                }
+            });
         }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        alert(title + " added to cart!");
-    });
-});
-</script>
+
+        function formatID(name) {
+            return name.replace(/\s+/g, "-");
+        }
+
+
+
+        function updateCartQuantities() {
+            const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+            cart.forEach(item => {
+                const name = item.title;
+                const qty = item.qty || 1;
+                const idName = formatID(name);
+                const qtyElem = document.getElementById(`cartQty-${idName}`);
+                if (qtyElem) {
+                    qtyElem.innerText = `In cart: ${qty}`;
+                }
+            });
+
+            // Set 0 for items not in cart
+            document.querySelectorAll(".card-title").forEach(titleElem => {
+                const name = titleElem.textContent.trim();
+                const idName = formatID(name);
+                const qtyElem = document.getElementById(`cartQty-${idName}`);
+                if (qtyElem && !cart.some(item => item.title === name)) {
+                    qtyElem.innerText = "";
+                }
+            });
+        }
+
+
+        function buyCard(name) {
+            const stock = getStock(name);
+            if (stock <= 0) {
+                alert(`${name} is out of stock.`);
+                return;
+            }
+
+            const card = Array.from(document.querySelectorAll(".card")).find(c =>
+                c.querySelector(".card-title")?.textContent === name
+            );
+
+            if (!card) {
+                alert("Card not found.");
+                return;
+            }
+
+            const img = card.querySelector("img").getAttribute("src");
+            const desc = card.querySelector(".card-type-hp").innerHTML;
+            const price = card.querySelector(".card-price").textContent;
+
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existing = cart.find(item => item.title === name);
+            if (existing) {
+                existing.qty = (existing.qty || 1) + 1;
+            } else {
+                cart.push({ title: name, img, desc, price, qty: 1 });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            updateInventory(name, -1); // decrement stock
+
+            alert(`${name} added to cart.`);
+            updateAllStocks();
+            updateCartQuantities();
+        }
+
+
+        window.onload = () => {
+            updateAllStocks();
+            updateCartQuantities();
+        };
+
+    </script>
 </body>
 </html>

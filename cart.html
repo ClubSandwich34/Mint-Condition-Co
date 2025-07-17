@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="center-section">
-            <img src="images/logo-icon.png" alt="Logo" class="icon logo-icon"/>
+            <img src="images/logo-icon.png" alt="Logo" class="icon logo-icon" />
         </div>
         <div class="right-section">
             <a href="account.html">
@@ -35,71 +35,180 @@
         <div class="cart-empty">
             <p>Your cart is currently empty.</p>
         </div>
+        <div id="summary-wrapper" style="display: none;">
+         <div class="cart-summary title-font" style="margin-top: 20px;">
+            <p id="subtotal-line">Subtotal: $0.00</p>
+            <p id="taxes-line">Taxes (15%): $0.00</p>
+            <p id="total-line"><strong>Total: $0.00</strong></p>
+            <button id="purchase-btn" style="margin-top: 10px;">Complete Purchase</button>
+         </div>
+        </div>
+
     </main>
     <script>
-function renderCart() {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const cartDiv = document.querySelector('.cart-empty');
-    if (cart.length > 0) {
-        cartDiv.innerHTML = '';
-        cart.forEach((item, idx) => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.style.marginBottom = "0"; // Remove extra margin for grid
+        function getInventory() {
+            return JSON.parse(localStorage.getItem("inventory") || "{}");
+        }
 
-            const unitPrice = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
-            const totalPrice = (unitPrice * (item.qty || 1)).toFixed(2);
-
-            let priceLine = `<p class="card-price title-font">$${totalPrice}`;
-            if ((item.qty || 1) >= 2) {
-                priceLine += ` <span style="font-size:0.9em;color:#bbb;">(${item.qty} × ${item.price})</span>`;
+        function updateInventory(name, change) {
+            const inv = getInventory();
+            if (inv[name] !== undefined) {
+                inv[name] = Math.max(inv[name] + change, 0);
+                localStorage.setItem("inventory", JSON.stringify(inv));
             }
-            priceLine += `</p>`;
+        }
 
-            card.innerHTML = `
-                <img src="${item.img}" alt="${item.title} Card" class="pokemon-card-img">
-                <h2 class="card-title title-font">${item.title}</h2>
-                <p class="card-type-hp">${item.desc}</p>
-                ${priceLine}
-                <div style="margin: 10px 0;">
-                    <button class="qty-btn" data-idx="${idx}" data-action="decrease">-</button>
-                    <span class="cart-qty" style="margin:0 10px;">${item.qty || 1}</span>
-                    <button class="qty-btn" data-idx="${idx}" data-action="increase">+</button>
-                </div>
-                <button class="remove-cart-btn" data-idx="${idx}">Remove</button>
-            `;
-            cartDiv.appendChild(card);
-        });
+        function getStock(name) {
+            const inv = getInventory();
+            return inv[name] ?? 0;
+        }
 
-        // Quantity buttons
-        cartDiv.querySelectorAll('.qty-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const idx = parseInt(this.getAttribute('data-idx'));
-                const action = this.getAttribute('data-action');
-                if (action === 'increase') {
-                    cart[idx].qty = (cart[idx].qty || 1) + 1;
-                } else if (action === 'decrease' && (cart[idx].qty || 1) > 1) {
-                    cart[idx].qty = (cart[idx].qty || 1) - 1;
+        function renderCart() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartDiv = document.querySelector('.cart-empty');
+            const subtotalEl = document.getElementById("subtotal-line");
+            const taxesEl = document.getElementById("taxes-line");
+            const totalEl = document.getElementById("total-line");
+
+            const summaryWrapper = document.getElementById("summary-wrapper");
+
+
+            let subtotal = 0;
+
+            if (cart.length > 0) {
+                summaryWrapper.style.display = "block";
+
+                cartDiv.innerHTML = '';
+
+                cart.forEach((item, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.style.marginBottom = "0";
+
+                    const unitPrice = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
+                    const qty = item.qty || 1;
+                    const maxStock = getStock(item.title);
+                    const cappedQty = qty;
+
+                    const totalPrice = (unitPrice * cappedQty).toFixed(2);
+                    subtotal += unitPrice * cappedQty;
+
+                    let priceLine = `
+                        <p class="card-price title-font">
+                         Unit Price: ${item.price}<br>
+                            Quantity: ${cappedQty}<br>
+                              Subtotal: $${totalPrice}
+                                </p>
+`;
+
+
+                    card.innerHTML = `
+                    <img src="${item.img}" alt="${item.title} Card" class="pokemon-card-img">
+                    <h2 class="card-title title-font">${item.title}</h2>
+                    <p class="card-type-hp">${item.desc}</p>
+                    ${priceLine}
+                    <div style="margin: 10px 0;">
+                        <button class="qty-btn" data-idx="${idx}" data-action="decrease">-</button>
+                        <span class="cart-qty" style="margin:0 10px;">${cappedQty}</span>
+                        <button class="qty-btn" data-idx="${idx}" data-action="increase">+</button>
+                    </div>
+                    <button class="remove-cart-btn" data-idx="${idx}">Remove</button>
+                `;
+                    cartDiv.appendChild(card);
+                });
+
+                // Update localStorage in case any qty was capped
+                localStorage.setItem('cart', JSON.stringify(cart));
+
+                // Subtotal and total
+                const taxes = subtotal * 0.15;
+                const total = subtotal + taxes;
+
+                subtotalEl.textContent = `Subtotal: $${subtotal.toFixed(2)}`;
+                taxesEl.textContent = `Taxes (15%): $${taxes.toFixed(2)}`;
+                totalEl.textContent = `Total: $${total.toFixed(2)}`;
+
+                // Quantity buttons
+                cartDiv.querySelectorAll('.qty-btn').forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        const idx = parseInt(this.getAttribute('data-idx'));
+                        const action = this.getAttribute('data-action');
+                        const item = cart[idx];
+                        const totalStock = getInventory()[item.title] ?? 0;
+                        const cartQty = item.qty || 1;
+
+                        if (action === 'increase') {
+                            // Check if any more are left in inventory (outside the cart)
+                            if (totalStock > 0) {
+                                cart[idx].qty = cartQty + 1;
+                                updateInventory(item.title, -1);
+
+                                if (totalStock - 1 === 0) {
+                                    alert(`Heads up! That’s the last ${item.title} we have in stock.`);
+                                }
+                            } else {
+                                alert(`${item.title} is already at max stock.`);
+                            }
+
+                        } else if (action === 'decrease') {
+                            if (cartQty === 1) {
+                                cart.splice(idx, 1);
+                                updateInventory(item.title, 1);
+                                alert(`${item.title} removed from cart.`);
+                            } else {
+                                cart[idx].qty = cartQty - 1;
+                                updateInventory(item.title, 1);
+                            }
+                        }
+
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        renderCart();
+                    });
+                });
+
+
+                // Remove buttons
+                cartDiv.querySelectorAll('.remove-cart-btn').forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        const idx = parseInt(this.getAttribute('data-idx'));
+                        const removedItem = cart.splice(idx, 1)[0];
+                        updateInventory(removedItem.title, removedItem.qty || 1);
+
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        renderCart();
+                    });
+                });
+
+            } else {
+                summaryWrapper.style.display = "none";
+
+                cartDiv.innerHTML = '<p>Your cart is currently empty.</p>';
+                subtotalEl.textContent = "Subtotal: $0.00";
+                taxesEl.textContent = "Taxes (15%): $0.00";
+                totalEl.textContent = "Total: $0.00";
+            }
+        }
+
+        document.getElementById("purchase-btn").addEventListener("click", function () {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const inventory = getInventory();
+
+            for (let item of cart) {
+                const name = item.title;
+                const qty = item.qty || 1;
+                if (inventory[name] !== undefined) {
+                    inventory[name] = Math.max(inventory[name] - qty, 0);
                 }
-                localStorage.setItem('cart', JSON.stringify(cart));
-                renderCart();
-            });
+            }
+
+            localStorage.setItem("inventory", JSON.stringify(inventory));
+            localStorage.removeItem("cart");
+            alert("Thank you for your purchase!");
+            renderCart();
         });
 
-        // Remove buttons
-        cartDiv.querySelectorAll('.remove-cart-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const idx = parseInt(this.getAttribute('data-idx'));
-                cart.splice(idx, 1);
-                localStorage.setItem('cart', JSON.stringify(cart));
-                renderCart();
-            });
-        });
-    } else {
-        cartDiv.innerHTML = '<p>Your cart is currently empty.</p>';
-    }
-}
-renderCart();
-</script>
+        renderCart();
+    </script>
+
 </body>
 </html>
