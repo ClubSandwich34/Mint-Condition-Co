@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="left-section">
+            <a href="index.html" class="pokeball-button" title="Home"></a>
+            <div class="search-container">
+                <input type="text" id="globalSearchInput" placeholder="Search cards..." />
+                <button class="search-btn" id="searchBtn">
+                    <img src="images/search-icon.png" alt="Search" class="icon" />
+                </button>
+            </div>
+            <script>
+                document.getElementById("searchBtn").addEventListener("click", function () {
+                    const query = document.getElementById("globalSearchInput").value.trim();
+                    if (query) {
+                        localStorage.setItem("searchQuery", query.toLowerCase());
+                        window.location.href = "search-results.html";
+                    }
+                });
+            </script>
+
+        </div>
+
+        <div class="center-section">
+            <img src="images/logo-icon.png" alt="Logo" class="icon logo-icon" />
+        </div>
+
+        <div class="right-section">
+            <a href="account.html">
+                <img src="images/profile-icon.png" alt="Profile" class="icon" />
+            </a>
+            <a href="cart.html">
+                <img src="images/cart-icon.png" alt="Cart" class="icon" />
+            </a>
+        </div>
+    </header>
+    <section class="cards-gallery" id="resultsContainer">
+        <!-- Cards will be dynamically added here -->
+    </section>
+
+    <script src="search-results.js"></script>
+    <script src="inventory.js"></script>
+
+    <script>
+        
+        const cardTitles = document.querySelectorAll(".card-title");
+
+        function updateAllStocks() {
+            cardTitles.forEach((title) => {
+                const name = title.textContent.trim();
+                const idName = formatID(name);
+                const stockElem = document.getElementById(`stock-${idName}`);
+                const button = title.closest('.card').querySelector('.add-to-cart-btn');
+
+                if (stockElem) {
+                    const stock = getStock(name);
+                    stockElem.innerText = stock > 0 ? `In stock: ${stock}` : "Sold Out";
+
+                    // Disable or enable button
+                    button.disabled = stock === 0;
+                    button.textContent = stock === 0 ? "Sold Out" : "Add to Cart";
+                }
+            });
+        }
+
+        function formatID(name) {
+            return name.replace(/\s+/g, "-");
+        }
+
+
+
+        function updateCartQuantities() {
+            const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+            if (!loggedInUser) {
+                alert("Please log in to add items to your cart.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            const cartKey = `cart_${loggedInUser.email}`;
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+            cart.forEach(item => {
+                const name = item.title;
+                const qty = item.qty || 1;
+                const idName = formatID(name);
+                const qtyElem = document.getElementById(`cartQty-${idName}`);
+                if (qtyElem) {
+                    qtyElem.innerText = `In cart: ${qty}`;
+                }
+            });
+
+            document.querySelectorAll(".card-title").forEach(titleElem => {
+                const name = titleElem.textContent.trim();
+                const idName = formatID(name);
+                const qtyElem = document.getElementById(`cartQty-${idName}`);
+                if (qtyElem && !cart.some(item => item.title === name)) {
+                    qtyElem.innerText = "";
+                }
+            });
+        }
+        function buyCard(name) {
+            const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+            if (!loggedInUser) {
+                alert("Please log in to add items to your cart.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            const cartKey = `cart_${loggedInUser.email}`;
+
+            const stock = getStock(name);
+            if (stock <= 0) {
+                alert(`${name} is out of stock.`);
+                return;
+            }
+
+            const card = Array.from(document.querySelectorAll(".card")).find(c =>
+                c.querySelector(".card-title")?.textContent === name
+            );
+
+            if (!card) {
+                alert("Card not found.");
+                return;
+            }
+
+            const img = card.querySelector("img").getAttribute("src");
+            const desc = card.querySelector(".card-type-hp").innerHTML;
+            const price = card.querySelector(".card-price").textContent;
+
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+            const existing = cart.find(item => item.title === name);
+            if (existing) {
+                existing.qty = (existing.qty || 1) + 1;
+            } else {
+                cart.push({ title: name, img, desc, price, qty: 1 });
+            }
+
+            localStorage.setItem(cartKey, JSON.stringify(cart));
+
+            updateInventory(name, -1); // decrement stock
+
+            alert(`${name} added to cart.`);
+            updateAllStocks();
+            updateCartQuantities();
+        }
+
+        const allCards = [
+            // Pokémon Cards
+            { title: "Squirtle", type: "Type: Water   HP: 60", image: "images/squirtle.png", price: "$4.99" },
+            { title: "Charmander", type: "Type: Fire   HP: 70", image: "images/charmander.png", price: "$5.99" },
+            { title: "Bulbasaur", type: "Type: Grass   HP: 70", image: "images/bulbasaur.png", price: "$5.99" },
+            { title: "Wartortle", type: "Type: Water   HP: 100", image: "images/wartortle.png", price: "$7.99" },
+            { title: "Charmeleon", type: "Type: Fire   HP: 100", image: "images/charmeleon.png", price: "$7.99" },
+            { title: "Ivysaur", type: "Type: Grass   HP: 100", image: "images/ivysaur.png", price: "$7.99" },
+            { title: "Blastoise EX", type: "Type: Water   HP: 330", image: "images/blastoise.png", price: "$29.99" },
+            { title: "Charizard EX", type: "Type: Fire   HP: 330", image: "images/charizard.png", price: "$29.99" },
+            { title: "Venusaur EX", type: "Type: Grass   HP: 340", image: "images/venusaur.png", price: "$29.99" },
+
+            // Trainer Cards
+            { title: "Dome Fossil", type: "Type: Item", image: "images/152.png", price: "$2.99" },
+            { title: "Helix Fossil", type: "Type: Item", image: "images/153.png", price: "$1.49" },
+            { title: "Old Amber", type: "Type: Item", image: "images/154.png", price: "$1.99" },
+            { title: "Big Air Balloon", type: "Type: Pokémon Tool", image: "images/155.png", price: "$2.99" },
+            { title: "Bills Transfer", type: "Type: Supporter", image: "images/156.png", price: "$2.99" },
+            { title: "Cycling Road", type: "Type: Stadium", image: "images/157.png", price: "$2.99" },
+
+            // Energy Cards
+            { title: "Gift Energy", type: "Energy", image: "images/167.jpg", price: "$0.99" },
+            { title: "Regenerative Energy", type: "Energy", image: "images/168.jpg", price: "$0.99" },
+            { title: "V Guard Energy", type: "Energy", image: "images/169.jpg", price: "$0.99" },
+            { title: "Treasure Energy", type: "Energy", image: "images/170.jpg", price: "$0.99" },
+            { title: "Jet Energy", type: "Energy", image: "images/171.jpg", price: "$0.99" }
+        ];
+
+        const container = document.getElementById("resultsContainer");
+        const query = localStorage.getItem("searchQuery");
+
+        if (query) {
+            const results = allCards.filter(card =>
+                card.title.toLowerCase().includes(query) ||
+                card.type.toLowerCase().includes(query)
+            );
+
+            if (results.length === 0) {
+                container.innerHTML = "<p>No results found.</p>";
+            } else {
+                results.forEach(card => {
+                    const stock = getStock(card.title);
+                    const cardDiv = document.createElement("div");
+                    cardDiv.className = "card";
+                    cardDiv.innerHTML = `
+                  <img src="${card.image}" alt="${card.title}" class="pokemon-card-img">
+                  <h2 class="card-title title-font">${card.title}</h2>
+                  <p class="card-type-hp">${card.type}</p>
+                  <p class="card-price title-font">Price: ${card.price}</p>
+                  <p class="stock">In Stock: ${stock}</p>
+                  <p class="cart-qty-indicator" id="cartQty-${formatID(card.title)}"></p>
+                  <button class="add-to-cart-btn" onclick="buyCard('${card.title}')">Add to Cart</button>
+                   `;
+                    container.appendChild(cardDiv);
+                });
+
+                updateAllStocks();
+                updateCartQuantities();
+            }
+        } else {
+            container.innerHTML = "<p>No search query provided.</p>";
+        }
+
+    </script>
+
+</body>
+</html>

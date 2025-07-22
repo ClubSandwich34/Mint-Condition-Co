@@ -11,11 +11,20 @@
         <div class="left-section">
             <a href="index.html" class="pokeball-button" title="Home"></a>
             <div class="search-container">
-                <input type="text" placeholder="Search cards..." />
-                <button class="search-btn">
+                <input type="text" id="globalSearchInput" placeholder="Search cards..." />
+                <button class="search-btn" id="searchBtn">
                     <img src="images/search-icon.png" alt="Search" class="icon" />
                 </button>
             </div>
+            <script>
+                document.getElementById("searchBtn").addEventListener("click", function () {
+                    const query = document.getElementById("globalSearchInput").value.trim();
+                    if (query) {
+                        localStorage.setItem("searchQuery", query.toLowerCase());
+                        window.location.href = "search-results.html";
+                    }
+                });
+            </script>
         </div>
         <div class="center-section">
             <img src="images/logo-icon.png" alt="Logo" class="icon logo-icon" />
