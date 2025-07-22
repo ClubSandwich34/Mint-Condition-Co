@@ -34,93 +34,130 @@
         <p class="title-font">This is where your selected cards will appear.</p>
         <div class="cart-empty">
             <p>Your cart is currently empty.</p>
+            <a href="purchase-history.html" id="historyBtn" class="create-account-btn" style="display: none; margin-top: 10px;">View Purchase History</a>
         </div>
-        <div id="summary-wrapper" style="display: none;">
-         <div class="cart-summary title-font" style="margin-top: 20px;">
-            <p id="subtotal-line">Subtotal: $0.00</p>
-            <p id="taxes-line">Taxes (15%): $0.00</p>
-            <p id="total-line"><strong>Total: $0.00</strong></p>
-            <button id="purchase-btn" style="margin-top: 10px;">Complete Purchase</button>
-         </div>
+        <div id="summary-wrapper" class="account-container">
+            <div class="cart-summary title-font" style="margin-top: 20px;">
+                <p id="subtotal-line">Subtotal: $0.00</p>
+                <p id="taxes-line">Taxes (15%): $0.00</p>
+                <p id="total-line"><strong>Total: $0.00</strong></p>
+                <button id="purchase-btn" class="remove-cart-btn" style="margin-top: 10px;">Complete Purchase</button>
+            </div>
         </div>
 
     </main>
+    <footer class="site-footer">
+        <button id="footerContactBtn" class="contact-us-btn">Contact Us</button>
+    </footer>
+    <!-- Contact Modal -->
+    <div id="modal" class="modal" style="display:none; position: fixed; z-index:1000; left:0; top:0; width:100%; height:100%; overflow:auto; background: rgba(0,0,0,0.5);">
+        <div style="background:#fff; margin: 10% auto; padding: 20px; max-width: 400px; border-radius: 8px; position: relative;">
+            <span id="closeModal" style="position:absolute; top:10px; right:15px; cursor:pointer; font-weight:bold;">&times;</span>
+            <h2>Contact Vendor</h2>
+            <form id="contactForm">
+                <label for="name">Name:</label><br />
+                <input type="text" id="name" name="name" required /><br />
+                <label for="email">Email:</label><br />
+                <input type="email" id="email" name="email" required /><br />
+                <label for="message">Message:</label><br />
+                <textarea id="message" name="message" rows="4" required></textarea><br />
+                <button type="submit">Send</button>
+                <p id="status" style="color:green; margin-top:10px;"></p>
+            </form>
+        </div>
+    </div>
     <script>
-        function getInventory() {
-            return JSON.parse(localStorage.getItem("inventory") || "{}");
-        }
+        // First get all elements
+        const modal = document.getElementById("modal");
+        const footerContactBtn = document.getElementById("footerContactBtn");
+        const closeModal = document.getElementById("closeModal");
+        const form = document.getElementById("contactForm");
+        const status = document.getElementById("status");
 
-        function updateInventory(name, change) {
-            const inv = getInventory();
-            if (inv[name] !== undefined) {
-                inv[name] = Math.max(inv[name] + change, 0);
-                localStorage.setItem("inventory", JSON.stringify(inv));
+        // Show modal on Contact Us button click
+        footerContactBtn.onclick = () => {
+            modal.style.display = "block";
+            status.textContent = "";
+            form.reset();
+        };
+
+        // Close modal when clicking the X
+        closeModal.onclick = () => {
+            modal.style.display = "none";
+        };
+
+        // Close modal when clicking outside the modal content
+        window.onclick = (event) => {
+            if (event.target === modal) {
+                modal.style.display = "none";
             }
-        }
+        };
 
-        function getStock(name) {
-            const inv = getInventory();
-            return inv[name] ?? 0;
-        }
+        // Handle form submission
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            status.style.color = "green";
+            status.textContent = "Thank you for contacting us!";
+            form.reset();
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 2000);
+        });
+    </script>
+    <script src="inventory.js"></script>
 
+    <script>
+        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (!loggedInUser) {
+            alert("Please log in to view your cart.");
+            window.location.href = "login.html";
+        }
+        const currentUser = loggedInUser;
+        const cartKey = `cart_${currentUser.email}`;
+
+        // Renders the cart UI dynamically
         function renderCart() {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             const cartDiv = document.querySelector('.cart-empty');
             const subtotalEl = document.getElementById("subtotal-line");
             const taxesEl = document.getElementById("taxes-line");
             const totalEl = document.getElementById("total-line");
-
             const summaryWrapper = document.getElementById("summary-wrapper");
-
 
             let subtotal = 0;
 
             if (cart.length > 0) {
                 summaryWrapper.style.display = "block";
-
-                cartDiv.innerHTML = '';
+                cartDiv.innerHTML = ''; // Clear empty message
 
                 cart.forEach((item, idx) => {
                     const card = document.createElement('div');
                     card.className = 'card';
-                    card.style.marginBottom = "0";
 
                     const unitPrice = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
                     const qty = item.qty || 1;
-                    const maxStock = getStock(item.title);
-                    const cappedQty = qty;
-
-                    const totalPrice = (unitPrice * cappedQty).toFixed(2);
-                    subtotal += unitPrice * cappedQty;
-
-                    let priceLine = `
-                        <p class="card-price title-font">
-                         Unit Price: ${item.price}<br>
-                            Quantity: ${cappedQty}<br>
-                              Subtotal: $${totalPrice}
-                                </p>
-`;
-
+                    const totalPrice = (unitPrice * qty).toFixed(2);
+                    subtotal += unitPrice * qty;
 
                     card.innerHTML = `
-                    <img src="${item.img}" alt="${item.title} Card" class="pokemon-card-img">
-                    <h2 class="card-title title-font">${item.title}</h2>
-                    <p class="card-type-hp">${item.desc}</p>
-                    ${priceLine}
-                    <div style="margin: 10px 0;">
-                        <button class="qty-btn" data-idx="${idx}" data-action="decrease">-</button>
-                        <span class="cart-qty" style="margin:0 10px;">${cappedQty}</span>
-                        <button class="qty-btn" data-idx="${idx}" data-action="increase">+</button>
-                    </div>
-                    <button class="remove-cart-btn" data-idx="${idx}">Remove</button>
-                `;
+                                <img src="${item.img}" alt="${item.title} Card" class="pokemon-card-img" />
+                                <div>
+                                    <h2 class="card-title title-font">${item.title}</h2>
+                                    <p class="card-type-hp">${item.desc}</p>
+                                    <p class="card-price title-font">
+                                        Unit Price: ${item.price}<br />
+                                        Quantity: <button class="qty-btn" data-idx="${idx}" data-action="decrease">-</button>
+                                        <span class="cart-qty">${qty}</span>
+                                        <button class="qty-btn" data-idx="${idx}" data-action="increase">+</button><br />
+                                        Subtotal: $${totalPrice}
+                                    </p>
+                                    <button class="remove-cart-btn" data-idx="${idx}">Remove</button>
+                                </div>
+                            `;
+
                     cartDiv.appendChild(card);
                 });
 
-                // Update localStorage in case any qty was capped
-                localStorage.setItem('cart', JSON.stringify(cart));
-
-                // Subtotal and total
                 const taxes = subtotal * 0.15;
                 const total = subtotal + taxes;
 
@@ -128,87 +165,114 @@
                 taxesEl.textContent = `Taxes (15%): $${taxes.toFixed(2)}`;
                 totalEl.textContent = `Total: $${total.toFixed(2)}`;
 
-                // Quantity buttons
-                cartDiv.querySelectorAll('.qty-btn').forEach(btn => {
-                    btn.addEventListener('click', function () {
-                        const idx = parseInt(this.getAttribute('data-idx'));
-                        const action = this.getAttribute('data-action');
-                        const item = cart[idx];
-                        const totalStock = getInventory()[item.title] ?? 0;
-                        const cartQty = item.qty || 1;
-
-                        if (action === 'increase') {
-                            // Check if any more are left in inventory (outside the cart)
-                            if (totalStock > 0) {
-                                cart[idx].qty = cartQty + 1;
-                                updateInventory(item.title, -1);
-
-                                if (totalStock - 1 === 0) {
-                                    alert(`Heads up! That’s the last ${item.title} we have in stock.`);
-                                }
-                            } else {
-                                alert(`${item.title} is already at max stock.`);
-                            }
-
-                        } else if (action === 'decrease') {
-                            if (cartQty === 1) {
-                                cart.splice(idx, 1);
-                                updateInventory(item.title, 1);
-                                alert(`${item.title} removed from cart.`);
-                            } else {
-                                cart[idx].qty = cartQty - 1;
-                                updateInventory(item.title, 1);
-                            }
-                        }
-
-                        localStorage.setItem('cart', JSON.stringify(cart));
-                        renderCart();
-                    });
-                });
-
-
-                // Remove buttons
-                cartDiv.querySelectorAll('.remove-cart-btn').forEach(btn => {
-                    btn.addEventListener('click', function () {
-                        const idx = parseInt(this.getAttribute('data-idx'));
-                        const removedItem = cart.splice(idx, 1)[0];
-                        updateInventory(removedItem.title, removedItem.qty || 1);
-
-                        localStorage.setItem('cart', JSON.stringify(cart));
-                        renderCart();
-                    });
-                });
-
+                attachEventListeners(cart);
             } else {
                 summaryWrapper.style.display = "none";
-
-                cartDiv.innerHTML = '<p>Your cart is currently empty.</p>';
+                cartDiv.innerHTML = `
+        <p>Your cart is currently empty.</p>
+        <a href="purchase-history.html" id="historyBtn" class="create-account-btn" style="margin-top: 10px;">View Purchase History</a>
+    `;
                 subtotalEl.textContent = "Subtotal: $0.00";
                 taxesEl.textContent = "Taxes (15%): $0.00";
                 totalEl.textContent = "Total: $0.00";
             }
         }
 
-        document.getElementById("purchase-btn").addEventListener("click", function () {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const inventory = getInventory();
+        // Attach event listeners for increase/decrease and remove buttons
+        function attachEventListeners(cart) {
+            const cartDiv = document.querySelector('.cart-empty');
 
-            for (let item of cart) {
-                const name = item.title;
-                const qty = item.qty || 1;
-                if (inventory[name] !== undefined) {
-                    inventory[name] = Math.max(inventory[name] - qty, 0);
-                }
+            cartDiv.querySelectorAll('.qty-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const idx = parseInt(this.getAttribute('data-idx'));
+                    const action = this.getAttribute('data-action');
+                    const item = cart[idx];
+                    const totalStock = getStock(item.title);
+                    const cartQty = item.qty || 1;
+
+                    if (action === 'increase') {
+                        if (totalStock > 0) {
+                            cart[idx].qty = cartQty + 1;
+                            updateInventory(item.title, -1);
+                        } else {
+                            alert(`No more stock for ${item.title}.`);
+                        }
+                    } else if (action === 'decrease') {
+                        if (cartQty === 1) {
+                            cart.splice(idx, 1);
+                            updateInventory(item.title, 1);
+                            alert(`${item.title} removed from cart.`);
+                        } else {
+                            cart[idx].qty = cartQty - 1;
+                            updateInventory(item.title, 1);
+                        }
+                    }
+
+                    localStorage.setItem(cartKey, JSON.stringify(cart));
+                    renderCart();
+                });
+            });
+
+            cartDiv.querySelectorAll('.remove-cart-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const idx = parseInt(this.getAttribute('data-idx'));
+                    const removedItem = cart.splice(idx, 1)[0];
+                    updateInventory(removedItem.title, removedItem.qty || 1);
+                    localStorage.setItem(cartKey, JSON.stringify(cart));
+                    renderCart();
+                });
+            });
+        }
+
+        // Purchase button clears cart and thanks user
+        document.getElementById("purchase-btn").addEventListener("click", function () {
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+            if (cart.length === 0) {
+                alert("Your cart is empty.");
+                return;
             }
 
-            localStorage.setItem("inventory", JSON.stringify(inventory));
-            localStorage.removeItem("cart");
+            // Build purchase summary
+            let subtotal = 0;
+            const items = cart.map(item => {
+                const unitPrice = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
+                const qty = item.qty || 1;
+                subtotal += unitPrice * qty;
+                return {
+                    img: item.img,
+                    title: item.title,
+                    desc: item.desc,
+                    price: item.price,
+                    qty: qty
+                };
+            });
+
+
+            const taxes = subtotal * 0.15;
+            const total = subtotal + taxes;
+
+            const purchase = {
+                date: new Date().toLocaleString(),
+                items: items,
+                total: total.toFixed(2)
+            };
+
+            // Store under user's email
+            const historyKey = `purchaseHistory_${currentUser.email}`;
+            const existingHistory = JSON.parse(localStorage.getItem(historyKey)) || [];
+            existingHistory.push(purchase);
+            localStorage.setItem(historyKey, JSON.stringify(existingHistory));
+
+            // Clear cart
+            localStorage.removeItem(cartKey);
             alert("Thank you for your purchase!");
             renderCart();
         });
 
+
+        // Initial render call
         renderCart();
     </script>
-
 </body>
 </html>

@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Create Account - Mint Condition Co.</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="left-section">
+            <a href="index.html" class="pokeball-button" title="Home"></a>
+            <div class="search-container">
+                <input type="text" placeholder="Search cards..." />
+                <button class="search-btn">
+                    <img src="images/search-icon.png" alt="Search" class="icon" />
+                </button>
+            </div>
+        </div>
+
+        <div class="center-section">
+            <img src="images/logo-icon.png" alt="Logo" class="icon logo-icon" />
+        </div>
+
+        <div class="right-section">
+            <a href="login.html">
+                <img src="images/profile-icon.png" alt="Profile" class="icon" />
+            </a>
+            <a href="cart.html">
+                <img src="images/cart-icon.png" alt="Cart" class="icon" />
+            </a>
+        </div>
+    </header>
+    <div class="login-container">
+        <h2>Create Your Account</h2>
+        <form onsubmit="register(event)">
+            <input type="email" id="email" name="email" placeholder="Email" required />
+            <input type="password" id="password" name="password" placeholder="Password" required />
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required />
+            <button type="submit">Register</button>
+            <p id="message" style="color: red;"></p>
+        </form>
+        <script>
+            function register(event) {
+                event.preventDefault();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                const message = document.getElementById('message');
+
+                if (!email || !password || !confirmPassword) {
+                    message.textContent = "Please fill in all fields.";
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    message.textContent = "Passwords do not match.";
+                    return;
+                }
+
+                // Check if account with that email already exists
+                const usersJSON = localStorage.getItem("users");
+                const users = usersJSON ? JSON.parse(usersJSON) : [];
+
+                const existingUser = users.find(u => u.email === email);
+                if (existingUser) {
+                    message.textContent = "An account with this email already exists.";
+                    return;
+                }
+
+                // Create and store the new user
+                users.push({ email, password });
+                localStorage.setItem("users", JSON.stringify(users));
+                localStorage.setItem("loggedInUser", JSON.stringify({ email }));
+
+                // Redirect to account.html
+                window.location.href = "account.html";
+            }
+        </script>
+    </div>
+</body>
+</html>

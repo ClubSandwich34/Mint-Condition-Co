@@ -1,8 +1,9 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title>Mint Condition Co.</title>
+    <meta charset="UTF-8">
+    <title>My Account - Mint Condition Co.</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
 </head>
@@ -11,7 +12,7 @@
         <div class="left-section">
             <a href="index.html" class="pokeball-button" title="Home"></a>
             <div class="search-container">
-                <input type="text" id="globalSearchInput" placeholder="Search cards..." />
+                <input type="text" placeholder="Search cards..." />
                 <button class="search-btn">
                     <img src="images/search-icon.png" alt="Search" class="icon" />
                 </button>
@@ -23,7 +24,7 @@
         </div>
 
         <div class="right-section">
-            <a href="account.html">
+            <a href="login.html">
                 <img src="images/profile-icon.png" alt="Profile" class="icon" />
             </a>
             <a href="cart.html">
@@ -31,30 +32,13 @@
             </a>
         </div>
     </header>
+    <main class="account-container">
+        <h2>Account Information</h2>
+        <p><strong>Email:</strong> <span id="user-email">Loading...</span></p>
 
-    <section id="categories">
-        <h2>Categories</h2>
-        <ul>
-            <li>
-                <a href="pokemon-cards.html" class="category-link">
-                    Pokémon Cards<br>
-                    <img src="images/pika.jpg" alt="Pokémon Cards" class="category-img">
-                </a>
-            </li>
-            <li>
-                <a href="trainer-cards.html" class="category-link">
-                    Trainer Cards<br>
-                    <img src="images/trainer.jpg" alt="Trainer Cards" class="category-img">
-                </a>
-            </li>
-            <li>
-                <a href="energy-cards.html" class="category-link">
-                    Energy Cards<br>
-                    <img src="images/energy.jpg" alt="Energy Cards" class="category-img">
-                </a>
-            </li>
-        </ul>
-    </section>
+        <button onclick="goToHistory()" class="create-account-btn">View Purchase History</button>
+        <button onclick="handleLogout()" class="create-account-btn">Log Out</button>
+    </main>
     <footer class="site-footer">
         <button id="footerContactBtn" class="contact-us-btn">Contact Us</button>
     </footer>
@@ -112,29 +96,27 @@
                 modal.style.display = "none";
             }, 2000);
         });
-
+    </script>
+    <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const searchBox = document.getElementById("globalSearchInput");
-            if (!searchBox) return; // Skip if page doesn't have the input
-
-            searchBox.addEventListener("input", function () {
-                const query = this.value.toLowerCase();
-                const allCards = document.querySelectorAll(".cards-gallery .card");
-
-                allCards.forEach(card => {
-                    const title = card.querySelector(".card-title")?.textContent.toLowerCase() || "";
-                    const desc = card.querySelector(".card-type-hp")?.textContent.toLowerCase() || "";
-
-                    if (title.includes(query) || desc.includes(query)) {
-                        card.style.display = "block";
-                    } else {
-                        card.style.display = "none";
-                    }
-                });
-            });
+            const userData = localStorage.getItem("loggedInUser");
+            if (userData) {
+                const user = JSON.parse(userData);
+                document.getElementById("user-email").textContent = user.email;
+            } else {
+                // No user logged in, redirect to login
+                window.location.href = "login.html";
+            }
         });
 
-    </script>
+        function goToHistory() {
+            window.location.href = "purchase-history.html";
+        }
 
+        function handleLogout() {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "login.html";
+        }
+    </script>
 </body>
 </html>

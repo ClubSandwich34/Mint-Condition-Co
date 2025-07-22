@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Mint Condition Co.</title>
+    <title>Purchase History</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
 </head>
@@ -11,7 +11,7 @@
         <div class="left-section">
             <a href="index.html" class="pokeball-button" title="Home"></a>
             <div class="search-container">
-                <input type="text" id="globalSearchInput" placeholder="Search cards..." />
+                <input type="text" placeholder="Search cards..." />
                 <button class="search-btn">
                     <img src="images/search-icon.png" alt="Search" class="icon" />
                 </button>
@@ -31,30 +31,43 @@
             </a>
         </div>
     </header>
+    <h2 class="site-title title-font">Your Purchase History</h2>
+    <section class="cards-gallery" id="history-container"></section>
+    <div class="back-link">
+        <a href="account.html" class="create-account-btn">← Back to Account</a>
+    </div>
 
-    <section id="categories">
-        <h2>Categories</h2>
-        <ul>
-            <li>
-                <a href="pokemon-cards.html" class="category-link">
-                    Pokémon Cards<br>
-                    <img src="images/pika.jpg" alt="Pokémon Cards" class="category-img">
-                </a>
-            </li>
-            <li>
-                <a href="trainer-cards.html" class="category-link">
-                    Trainer Cards<br>
-                    <img src="images/trainer.jpg" alt="Trainer Cards" class="category-img">
-                </a>
-            </li>
-            <li>
-                <a href="energy-cards.html" class="category-link">
-                    Energy Cards<br>
-                    <img src="images/energy.jpg" alt="Energy Cards" class="category-img">
-                </a>
-            </li>
-        </ul>
-    </section>
+    <script>
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        const container = document.getElementById("history-container");
+
+        if (!user || !user.email) {
+            container.innerHTML = "<p class='no-history'>You must be logged in to view your purchase history.</p>";
+        } else {
+            const historyKey = `purchaseHistory_${user.email}`;
+            const history = JSON.parse(localStorage.getItem(historyKey)) || [];
+
+            if (history.length === 0) {
+                container.innerHTML = "<p class='no-history'>No purchases found for this account.</p>";
+            } else {
+                history.reverse().forEach((purchase, index) => {
+                    purchase.items.forEach(item => {
+                        const card = document.createElement("div");
+                        card.className = "card";
+                        card.innerHTML = `
+                                    <img src="${item.img}" alt="${item.title} Card" class="pokemon-card-img">
+                                    <h2 class="card-title title-font">${item.title}</h2>
+                                    <p class="card-type-hp">${item.desc}</p>
+                                    <p class="card-price title-font">${item.price}</p>
+                                    <p class="cart-qty-indicator">Purchased: ${item.qty}</p>
+                                    <p class="purchase-date">Date: ${purchase.date}</p>
+                                `;
+                        container.appendChild(card);
+                    });
+                });
+            }
+        }
+    </script>
     <footer class="site-footer">
         <button id="footerContactBtn" class="contact-us-btn">Contact Us</button>
     </footer>
@@ -112,29 +125,6 @@
                 modal.style.display = "none";
             }, 2000);
         });
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const searchBox = document.getElementById("globalSearchInput");
-            if (!searchBox) return; // Skip if page doesn't have the input
-
-            searchBox.addEventListener("input", function () {
-                const query = this.value.toLowerCase();
-                const allCards = document.querySelectorAll(".cards-gallery .card");
-
-                allCards.forEach(card => {
-                    const title = card.querySelector(".card-title")?.textContent.toLowerCase() || "";
-                    const desc = card.querySelector(".card-type-hp")?.textContent.toLowerCase() || "";
-
-                    if (title.includes(query) || desc.includes(query)) {
-                        card.style.display = "block";
-                    } else {
-                        card.style.display = "none";
-                    }
-                });
-            });
-        });
-
     </script>
-
 </body>
 </html>

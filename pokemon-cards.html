@@ -11,7 +11,7 @@
         <div class="left-section">
             <a href="index.html" class="pokeball-button" title="Home"></a>
             <div class="search-container">
-                <input type="text" placeholder="Search cards..." />
+                <input type="text" id="globalSearchInput" placeholder="Search cards..." />
                 <button class="search-btn">
                     <img src="images/search-icon.png" alt="Search" class="icon" />
                 </button>
@@ -117,6 +117,64 @@
             <!-- Add more cards as needed -->
         </section>
     </main>
+    <footer class="site-footer">
+        <button id="footerContactBtn" class="contact-us-btn">Contact Us</button>
+    </footer>
+    <!-- Contact Modal -->
+    <div id="modal" class="modal" style="display:none; position: fixed; z-index:1000; left:0; top:0; width:100%; height:100%; overflow:auto; background: rgba(0,0,0,0.5);">
+        <div style="background:#fff; margin: 10% auto; padding: 20px; max-width: 400px; border-radius: 8px; position: relative;">
+            <span id="closeModal" style="position:absolute; top:10px; right:15px; cursor:pointer; font-weight:bold;">&times;</span>
+            <h2>Contact Vendor</h2>
+            <form id="contactForm">
+                <label for="name">Name:</label><br />
+                <input type="text" id="name" name="name" required /><br />
+                <label for="email">Email:</label><br />
+                <input type="email" id="email" name="email" required /><br />
+                <label for="message">Message:</label><br />
+                <textarea id="message" name="message" rows="4" required></textarea><br />
+                <button type="submit">Send</button>
+                <p id="status" style="color:green; margin-top:10px;"></p>
+            </form>
+        </div>
+    </div>
+    <script>
+        // First get all elements
+        const modal = document.getElementById("modal");
+        const footerContactBtn = document.getElementById("footerContactBtn");
+        const closeModal = document.getElementById("closeModal");
+        const form = document.getElementById("contactForm");
+        const status = document.getElementById("status");
+
+        // Show modal on Contact Us button click
+        footerContactBtn.onclick = () => {
+            modal.style.display = "block";
+            status.textContent = "";
+            form.reset();
+        };
+
+        // Close modal when clicking the X
+        closeModal.onclick = () => {
+            modal.style.display = "none";
+        };
+
+        // Close modal when clicking outside the modal content
+        window.onclick = (event) => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+
+        // Handle form submission
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            status.style.color = "green";
+            status.textContent = "Thank you for contacting us!";
+            form.reset();
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 2000);
+        });
+    </script>
     <script src="inventory.js"></script>
     <script>
         const cardTitles = document.querySelectorAll(".card-title");
@@ -146,7 +204,15 @@
 
 
         function updateCartQuantities() {
-            const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+            const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+            if (!loggedInUser) {
+                alert("Please log in to add items to your cart.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            const cartKey = `cart_${loggedInUser.email}`;
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
 
             cart.forEach(item => {
                 const name = item.title;
@@ -158,7 +224,6 @@
                 }
             });
 
-            // Set 0 for items not in cart
             document.querySelectorAll(".card-title").forEach(titleElem => {
                 const name = titleElem.textContent.trim();
                 const idName = formatID(name);
@@ -170,7 +235,17 @@
         }
 
 
+
         function buyCard(name) {
+            const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+            if (!loggedInUser) {
+                alert("Please log in to add items to your cart.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            const cartKey = `cart_${loggedInUser.email}`;
+
             const stock = getStock(name);
             if (stock <= 0) {
                 alert(`${name} is out of stock.`);
@@ -190,7 +265,7 @@
             const desc = card.querySelector(".card-type-hp").innerHTML;
             const price = card.querySelector(".card-price").textContent;
 
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
             const existing = cart.find(item => item.title === name);
             if (existing) {
                 existing.qty = (existing.qty || 1) + 1;
@@ -198,7 +273,7 @@
                 cart.push({ title: name, img, desc, price, qty: 1 });
             }
 
-            localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem(cartKey, JSON.stringify(cart));
 
             updateInventory(name, -1); // decrement stock
 
@@ -206,13 +281,33 @@
             updateAllStocks();
             updateCartQuantities();
         }
-
-
-        window.onload = () => {
+        document.addEventListener('DOMContentLoaded', () => {
             updateAllStocks();
             updateCartQuantities();
-        };
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const searchBox = document.getElementById("globalSearchInput");
+            if (!searchBox) return; // Skip if page doesn't have the input
+
+            searchBox.addEventListener("input", function () {
+                const query = this.value.toLowerCase();
+                const allCards = document.querySelectorAll(".cards-gallery .card");
+
+                allCards.forEach(card => {
+                    const title = card.querySelector(".card-title")?.textContent.toLowerCase() || "";
+                    const desc = card.querySelector(".card-type-hp")?.textContent.toLowerCase() || "";
+
+                    if (title.includes(query) || desc.includes(query)) {
+                        card.style.display = "block";
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+        });
 
     </script>
+
 </body>
 </html>

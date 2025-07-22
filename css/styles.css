@@ -33,7 +33,6 @@
     gap: 10px;
 }
 
-
 /* Shared icon styles */
 .icon {
     width: 30px;
@@ -59,7 +58,6 @@
     .pokeball-button:hover {
         background-image: url("../images/open-pokeball.jpg");
     }
-
 
 /* Site title in center */
 .site-title {
@@ -99,36 +97,36 @@
     border-top: 2px solid black;
 }
 
-#categories h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    text-align: center;
-    font-weight: bold;
-    color: red;
-    font-family: 'Bree Serif', serif; 
-}
+    #categories h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        text-align: center;
+        font-weight: bold;
+        color: red;
+        font-family: 'Bree Serif', serif;
+    }
 
-#categories ul {
-    list-style-type: none;
-    padding: 0;
-    display: flex;              
-    justify-content: center;    
-    gap: 40px;                  
-}
+    #categories ul {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+    }
 
-#categories li {
-    font-size: 18px;
-    padding: 5px 0;
-    text-align: center;
-    font-family: 'Bree Serif', serif;
-    display: flex;
-    flex-direction: column;     
-    align-items: center;
-}
+    #categories li {
+        font-size: 18px;
+        padding: 5px 0;
+        text-align: center;
+        font-family: 'Bree Serif', serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
 .category-img {
     margin-top: 10px;
-    width: 100px;               
+    width: 100px;
     height: auto;
 }
 
@@ -138,9 +136,9 @@
     transition: color 0.2s;
 }
 
-.category-link:hover {
-    color: rgb(255, 0, 0); 
-}
+    .category-link:hover {
+        color: rgb(255, 0, 0);
+    }
 
 .title-font {
     font-family: 'Bree Serif', serif;
@@ -152,6 +150,7 @@
     flex-wrap: wrap;
     gap: 24px;
     justify-content: flex-start;
+    padding-bottom: 4rem;
 }
 
 .card {
@@ -195,7 +194,6 @@
     margin-top: 4px;
 }
 
-
 .add-to-cart-btn,
 .qty-btn,
 .remove-cart-btn {
@@ -213,16 +211,16 @@
     transition: background 0.2s, color 0.2s, transform 0.1s;
 }
 
-.add-to-cart-btn:hover,
-.qty-btn:hover,
-.remove-cart-btn:hover,
-.add-to-cart-btn:focus,
-.qty-btn:focus,
-.remove-cart-btn:focus {
-    background: linear-gradient(90deg, #b80000 0%, #ff3c3c 100%);
-    color: #fff;
-    transform: translateY(-2px) scale(1.04);
-}
+    .add-to-cart-btn:hover,
+    .qty-btn:hover,
+    .remove-cart-btn:hover,
+    .add-to-cart-btn:focus,
+    .qty-btn:focus,
+    .remove-cart-btn:focus {
+        background: linear-gradient(90deg, #b80000 0%, #ff3c3c 100%);
+        color: #fff;
+        transform: translateY(-2px) scale(1.04);
+    }
 
 .qty-btn {
     padding: 6px 16px;
@@ -250,3 +248,322 @@
     font-weight: normal;
     margin: 6px 0;
 }
+
+/* New Notification Styles */
+.stock-warning {
+    font-size: 0.95rem;
+    color: #ff0000;
+    margin-top: 4px;
+    font-weight: bold;
+    font-family: 'Bree Serif', serif;
+}
+
+.login-container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    background-color: #fff;
+    font-family: 'Bree Serif', serif;
+}
+
+    .login-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .login-container label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+    }
+
+    .login-container input[type="email"],
+    .login-container input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    .login-container button {
+        width: 100%;
+        padding: 10px;
+        background-color: #e60012;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1.1em;
+        cursor: pointer;
+    }
+
+        .login-container button:hover {
+            background-color: #c40010;
+        }
+
+.create-account-container {
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Bree Serif', serif;
+}
+
+.create-account-btn {
+    background: linear-gradient(90deg, #ff3c3c 0%, #b80000 100%);
+    color: #fff;
+    padding: 10px 24px;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+    transition: background 0.2s ease;
+}
+
+    .create-account-btn:hover {
+        background: linear-gradient(90deg, #b80000 0%, #ff3c3c 100%);
+    }
+
+.register-container {
+    background-color: white;
+    padding: 30px;
+    border: 2px solid black;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+    .register-container h2 {
+        color: red;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .register-container input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 16px;
+        border: 1px solid #aaa;
+        border-radius: 8px;
+        font-family: 'Bree Serif', serif;
+    }
+
+.register-btn {
+    background: linear-gradient(90deg, #ff3c3c 0%, #b80000 100%);
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+    .register-btn:hover {
+        background: linear-gradient(90deg, #b80000 0%, #ff3c3c 100%);
+    }
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    color: #333;
+    text-decoration: none;
+}
+
+    .back-link:hover {
+        color: red;
+    }
+
+.account-container {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 30px;
+    background-color: #f4f4f4;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-family: 'Bree Serif', serif;
+    padding-bottom: 4rem;
+    text-align: center;
+}
+
+    .account-container h2 {
+        font-size: 28px;
+        color: red;
+        margin-bottom: 20px;
+        font-family: 'Bree Serif', serif;
+    }
+
+.account-info {
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-family: 'Bree Serif', serif;
+}
+
+.history-btn {
+    display: inline-block;
+    background: linear-gradient(90deg, #ff3c3c 0%, #b80000 100%);
+    color: #fff;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+    .history-btn:hover {
+        background: linear-gradient(90deg, #b80000 0%, #ff3c3c 100%);
+        transform: scale(1.05);
+    }
+
+.purchase-entry {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+.item {
+    margin-left: 20px;
+}
+
+.total {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.no-history {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 40px;
+}
+
+.site-footer {
+    background-color: #e9f2ed;
+    padding: 15px 0;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.3);
+    z-index: 999;
+}
+
+.contact-us-btn {
+    background-color: #ff3e3e;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .contact-us-btn:hover {
+        background-color: #e63232;
+    }
+
+/* Modal Overlay */
+.modal {
+    display: none; /* controlled by JS */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+    /* Modal Content Box */
+    .modal > div {
+        background: white;
+        margin: 10% auto;
+        padding: 20px;
+        max-width: 400px;
+        border-radius: 12px;
+        font-family: 'Bree Serif', serif;
+        position: relative;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+/* Close Button */
+#closeModal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-weight: bold;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Form Elements */
+#contactForm label {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+#contactForm input,
+#contactForm textarea {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 6px;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    font-family: 'Bree Serif', serif;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#contactForm textarea {
+    resize: vertical; /* user can drag to resize vertically */
+    min-height: 80px; /* starting height */
+    max-height: 300px; /* optional limit */
+    overflow: auto; /* show scrollbar if needed */
+}
+
+#contactForm button[type="submit"] {
+    margin-top: 15px;
+    background: linear-gradient(90deg, #ff3c3c 0%, #b80000 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-family: 'Bree Serif', serif;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+    #contactForm button[type="submit"]:hover {
+        background: linear-gradient(90deg, #b80000 0%, #ff3c3c 100%);
+    }
+
+/* Status Message */
+#status {
+    margin-top: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: green;
+}
+
+/* Footer stays at bottom */
+.site-footer {
+    background: #f8f8f8;
+    text-align: center;
+    padding: 1rem;
+    border-top: 1px solid #ccc;
+    z-index: 0;
+}
+
+
+
