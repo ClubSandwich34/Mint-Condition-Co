@@ -60,19 +60,19 @@
             const password = document.getElementById("password").value.trim();
 
             // Get stored credentials from localStorage
-            const storedEmail = localStorage.getItem("userEmail");
-            const storedPassword = localStorage.getItem("userPassword");
+            const usersJSON = localStorage.getItem("users");
+            const users = usersJSON ? JSON.parse(usersJSON) : [];
 
-            if (email === storedEmail && password === storedPassword) {
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
                 alert("Login successful!");
-                const user = {
-                    email: storedEmail
-                };
-                localStorage.setItem("loggedInUser", JSON.stringify(user));
+                localStorage.setItem("loggedInUser", JSON.stringify({ email }));
                 window.location.href = "account.html";
             } else {
                 alert("Invalid credentials. Please try again or create an account.");
             }
+
         }
     </script>
 
